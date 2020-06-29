@@ -2,7 +2,7 @@
 
 #create a 3x3 list of blank spaces
 def new_board():
-	board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+    board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
 	return board
 
 #print the current board to the user

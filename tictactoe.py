@@ -87,33 +87,34 @@ def get_valid_move(player, board):
     else:
         return get_valid_move(player, board)
 
-# Initialize the game.
-turn = 0
-winner = None
-board = new_board()
-player = 'X'
-
-print('Welcome to Tic Tac Toe!')
-print("Enter a1 - c3 to choose a space (a1 = top left corner)")
-print()
-
-print_board(board)
-
 # Main loop.
-while not winner and turn < 9:
-    print()
-    player = get_player_from_turn(turn)
-    move = get_valid_move(player, board)
-    board = update_board(board, move, player)
-    print_board(board)
-    winner = get_winner(board)
-    print("winner", winner)
-    turn += 1
+def run():
+    # Initialize the game.
+    turn = 0
+    winner = None
+    board = new_board()
+    player = 'X'
 
-if winner:
+    print('Welcome to Tic Tac Toe!')
+    print("Enter a1 - c3 to choose a space (a1 = top left corner)")
     print()
-    print(f'Player {winner} wins! Game over!')
-else:
-    print()
-    print("Cat's game! Game Over!")
+
+    print_board(board)
+
+    while not winner and turn < 9:
+        print()
+        player = get_player_from_turn(turn)
+        move = get_valid_move(player, board)
+        board = update_board(board, move, player)
+        print_board(board)
+        winner = get_winner(board)
+        print("winner", winner)
+        turn += 1
+
+    if winner:
+        print()
+        print(f'Player {winner} wins! Game over!')
+    else:
+        print()
+        print("Cat's game! Game Over!")
 

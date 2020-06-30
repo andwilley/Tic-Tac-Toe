@@ -1,147 +1,97 @@
-#Tic Tac Toe
+# Tic Tac Toe
 
-#create a 3x3 list of blank spaces
+# Convert user input to board indexes.
+STRING_TO_ROW = {
+    'a': 0,
+    'b': 1,
+    'c': 2,
+}
+STRING_TO_COL = {
+    '1': 0,
+    '2': 1,
+    '3': 2,
+}
+
+# Create a 3x3 list of blank spaces.
 def new_board():
-    board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+    return [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+
+# Print the current board to the terminal.
+def print_board(board):
+    print("\n-+-+-\n".join(map(lambda row: "|".join(row), board)))
+
+def get_player_from_turn(turn):
+    return 'X' if turn % 2 == 0 else 'O'
+
+def parse_move(cli_input):
+    cli_input = cli_input.strip()
+    if len(cli_input) != 2 or cli_input[0] not in STRING_TO_ROW or cli_input[1] not in STRING_TO_COL:
+        raise Error("fuck off")
+    return STRING_TO_ROW[cli_input[0]], STRING_TO_COL[cli_input[1]]
+
+# Make sure the space is not already taken.
+def square_is_open(move, board):
+    return board[move[0]][move[1]] == " "
+
+def update_board(board, move, player):
+    board[move[0]][move[1]] = player
     return board
 
-#print the current board to the user
-def print_board(board):
-    print("", board[0][0], "|", board[0][1], "|", board[0][2])
-    print("---+---+---")
-    print("", board[1][0], "|", board[1][1], "|", board[1][2])
-    print("---+---+---")
-    print("", board[2][0], "|", board[2][1], "|", board[2][2])
+def check_rows(board):
+    for row in board:
+        if len(set(row)) == 1 and row[0] != " ":
+            print('row', row[0])
+            return row[0]
+    return None
 
-#take the user input and return an X or O depending on who's turn it is
-def next_turn(turn):
-    if (turn % 2) == 0:
-        print("X's turn!")
-    elif (turn % 2) == 1:
-        print("O's turn!")
-    move = input("Enter your move: ")
+def check_diags(board):
+    left_to_right_vals = set([])
+    right_to_left_vals = set([])
+    for col, row in enumerate(board):
+        left_to_right_vals.add(row[col])
+        right_to_left_vals.add(row[len(row) - 1 - col])
+    if len(left_to_right_vals) == 1 and " " not in left_to_right_vals:
+        return left_to_right_vals.pop()
+    if len(right_to_left_vals) == 1 and " " not in right_to_left_vals:
+        return right_to_left_vals.pop()
+    return None
+
+# Assumes a square board.
+def get_winner(board):
+    # Check the rows for a winner.
+    maybe_winner = check_rows(board)
+    if maybe_winner:
+        return maybe_winner
+    # Check the columns for a winner.
+    transposed_board = map(list, zip(*board))
+    maybe_winner = check_rows(transposed_board)
+    if maybe_winner:
+        return maybe_winner
+    # Check the diagonals for a winner.
+    return check_diags(board)
+
+# Get a valid move recursively.
+def get_valid_move(player, board):
+    print(f"{player}'s turn!")
+    cli_input = input("Enter your move: ")
     print()
-    if turn%2 == 0:
-        return ("X", move)
+    move = None
+    try:
+        move = parse_move(cli_input)
+    except:
+        print("bad input, try again!")
+        return get_valid_move(player, board)
+    # Ensure no mark is already at this position.
+    if square_is_open(move, board):
+        return move
     else:
-        return ("O", move)
+        return get_valid_move(player, board)
 
-#make sure the user input a valid entry and the space is not already taken
-def check_move(move, board):
-    if move[1] == 'a1':
-        if board[0][0] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'a2':
-        if board[0][1] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'a3':
-        if board[0][2] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'b1':
-        if board[1][0] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'b2':
-        if board[1][1] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'b3':
-        if board[1][2] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'c1':
-        if board[2][0] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'c2':
-        if board[2][1] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    elif move[1] == 'c3':
-        if board[2][2] == " ":
-            return True
-        else:
-            print("That spot is already taken!")
-            print()
-            return False
-    else:
-        print("That is not a valid entry!")
-        print()
-        return False
-
-#takes the current board and the user's move as parameters and updates the board with the new move
-def update_board(board, player_move):
-    if player_move[1] == 'a1':
-        board[0][0] = player_move[0]
-    elif player_move[1] == 'a2':
-        board[0][1] = player_move[0]
-    elif player_move[1] == 'a3':
-        board[0][2] = player_move[0]
-    elif player_move[1] == 'b1':
-        board[1][0] = player_move[0]
-    elif player_move[1] == 'b2':
-        board[1][1] = player_move[0]
-    elif player_move[1] == 'b3':
-        board[1][2] = player_move[0]
-    elif player_move[1] == 'c1':
-        board[2][0] = player_move[0]
-    elif player_move[1] == 'c2':
-        board[2][1] = player_move[0]
-    elif player_move[1] == 'c3':
-        board[2][2] = player_move[0]
-
-#checks to see if there is a 'tic tac toe' condition on the board
-def check_win(board):
-    if (board[0][0] == board[0][1]) and (board[0][1] == board[0][2]) and (board[0][0] != " "):
-        return True
-    elif (board[1][0] == board[1][1]) and (board[1][1] == board[1][2]) and (board[1][0] != " "):
-        return True
-    elif (board[2][0] == board[2][1]) and (board[2][1] == board[2][2]) and (board[2][0] != " "):
-        return True
-    elif (board[0][0] == board[1][0]) and (board[1][0] == board[2][0]) and (board[0][0] != " "):
-        return True
-    elif (board[0][1] == board[1][1]) and (board[1][1] == board[2][1]) and (board[0][1] != " "):
-        return True
-    elif (board[0][2] == board[1][2]) and (board[1][2] == board[2][2]) and (board[0][2] != " "):
-        return True
-    elif (board[0][0] == board[1][1]) and (board[1][1] == board[2][2]) and (board[0][0] != " "):
-        return True
-    elif (board[0][2] == board[1][1]) and (board[1][1] == board[2][0]) and (board[0][2] != " "):
-        return True
-    else:
-        return False
-
-#Program Initializes
-turn = 0 #initialize the number of turns taken
-win = False #initialize win condition
-board = new_board() #create the new tic tac toe board
+# Initialize the game.
+turn = 0
+winner = None
+board = new_board()
+player = 'X'
 
 print('Welcome to Tic Tac Toe!')
 print("Enter a1 - c3 to choose a space (a1 = top left corner)")
@@ -149,22 +99,20 @@ print()
 
 print_board(board)
 
-#Main loop
-while (win == False) and turn < 9: #loop runs while no one has won and the board isn't full
+# Main loop.
+while not winner and turn < 9:
     print()
-    while True:
-        player = (turn % 2) + 1 #keeps track of who's turn it is (player 1 or 2)
-        player_move = next_turn(turn)
-        if check_move(player_move, board) == True: #loop that runs until user enters a valid move
-            break
-    update_board(board, player_move)
+    player = get_player_from_turn(turn)
+    move = get_valid_move(player, board)
+    board = update_board(board, move, player)
     print_board(board)
-    win = check_win(board)
-    turn += 1 #update what turn number it is
+    winner = get_winner(board)
+    print("winner", winner)
+    turn += 1
 
-if win == True: #check to see if someone won, or if it was a cat's game
+if winner:
     print()
-    print(f'Player {player} wins! Game over!')
+    print(f'Player {winner} wins! Game over!')
 else:
     print()
     print("Cat's game! Game Over!")

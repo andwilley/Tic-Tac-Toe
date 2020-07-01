@@ -14,7 +14,7 @@ STRING_TO_COL = {
 
 # Create a 3x3 list of blank spaces.
 def new_board():
-    return [[None]*3 for i in range(3)]
+    return [[None]*3 for _ in range(3)]
 
 # Print the current board to the terminal.
 def print_board(board):
@@ -48,7 +48,7 @@ def check_rows(board):
             return row[0]
     return None
 
-def check_diags(board):
+def check_diagonals(board):
     left_to_right_vals = set()
     right_to_left_vals = set()
     for col, row in enumerate(board):
@@ -72,7 +72,7 @@ def get_winner(board):
     if maybe_winner:
         return maybe_winner
     # Check the diagonals for a winner.
-    return check_diags(board)
+    return check_diagonals(board)
 
 # Get a valid move recursively.
 def get_valid_move(player, board):
@@ -112,7 +112,6 @@ def run():
         board = update_board(board, move, player)
         print_board(board)
         winner = get_winner(board)
-        print("winner", winner)
         turn += 1
 
     if winner:

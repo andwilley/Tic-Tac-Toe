@@ -14,11 +14,15 @@ STRING_TO_COL = {
 
 # Create a 3x3 list of blank spaces.
 def new_board():
-    return [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+    return [[None]*3 for i in range(3)]
 
 # Print the current board to the terminal.
 def print_board(board):
-    print("\n-+-+-\n".join(map(lambda row: "|".join(row), board)))
+    print("\n-+-+-\n" .join(map(
+        lambda row: "|".join(map(
+            lambda x: " " if not x else x,
+            row)),
+        board)))
 
 def get_player_from_turn(turn):
     return 'X' if turn % 2 == 0 else 'O'
@@ -26,12 +30,12 @@ def get_player_from_turn(turn):
 def parse_move(cli_input):
     cli_input = cli_input.strip()
     if len(cli_input) != 2 or cli_input[0] not in STRING_TO_ROW or cli_input[1] not in STRING_TO_COL:
-        raise Error("fuck off")
+        raise IOError("fuck off")
     return STRING_TO_ROW[cli_input[0]], STRING_TO_COL[cli_input[1]]
 
 # Make sure the space is not already taken.
 def square_is_open(move, board):
-    return board[move[0]][move[1]] == " "
+    return not board[move[0]][move[1]]
 
 def update_board(board, move, player):
     board[move[0]][move[1]] = player
@@ -39,20 +43,20 @@ def update_board(board, move, player):
 
 def check_rows(board):
     for row in board:
-        if len(set(row)) == 1 and row[0] != " ":
+        if row[0] and len(set(row)) == 1:
             print('row', row[0])
             return row[0]
     return None
 
 def check_diags(board):
-    left_to_right_vals = set([])
-    right_to_left_vals = set([])
+    left_to_right_vals = set()
+    right_to_left_vals = set()
     for col, row in enumerate(board):
         left_to_right_vals.add(row[col])
         right_to_left_vals.add(row[len(row) - 1 - col])
-    if len(left_to_right_vals) == 1 and " " not in left_to_right_vals:
+    if board[0][0] and len(left_to_right_vals) == 1:
         return left_to_right_vals.pop()
-    if len(right_to_left_vals) == 1 and " " not in right_to_left_vals:
+    if board[0][-1] and len(right_to_left_vals) == 1:
         return right_to_left_vals.pop()
     return None
 
@@ -79,17 +83,17 @@ def get_valid_move(player, board):
     try:
         move = parse_move(cli_input)
     except:
-        print("bad input, try again!")
+        print("That's not a space on this board, try again!")
         return get_valid_move(player, board)
-    # Ensure no mark is already at this position.
+
     if square_is_open(move, board):
         return move
     else:
+        print("That space is already taken, try again!")
         return get_valid_move(player, board)
 
 # Main loop.
 def run():
-    # Initialize the game.
     turn = 0
     winner = None
     board = new_board()
@@ -118,3 +122,5 @@ def run():
         print()
         print("Cat's game! Game Over!")
 
+if __name__ == "__main__":
+    run()

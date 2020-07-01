@@ -1,18 +1,6 @@
 from string import ascii_lowercase
 # Tic Tac Toe
 
-# Convert user input to board indexes.
-STRING_TO_ROW = {
-    'a': 0,
-    'b': 1,
-    'c': 2,
-}
-STRING_TO_COL = {
-    '1': 0,
-    '2': 1,
-    '3': 2,
-}
-
 # Create a 3x3 list of blank spaces.
 def new_board(dim):
     return [[None]*dim for _ in range(dim)]
@@ -28,11 +16,12 @@ def print_board(board):
 def get_player_from_turn(turn):
     return 'X' if turn % 2 == 0 else 'O'
 
-def parse_move(cli_input):
-    cli_input = cli_input.strip()
-    if len(cli_input) != 2 or cli_input[0] not in STRING_TO_ROW or cli_input[1] not in STRING_TO_COL:
+# Throws ValueError if numbers arent integers or aren't on the board.
+def parse_move(cli_input, board):
+    cli_input = list(map(lambda x: int(x), cli_input.strip().split(' ')))
+    if len(cli_input) != 2 or not (0 <= cli_input[0] < len(board[0])) or not (0 <= cli_input[1] < len(board[0])):
         raise IOError("fuck off")
-    return STRING_TO_ROW[cli_input[0]], STRING_TO_COL[cli_input[1]]
+    return cli_input[0], cli_input[1]
 
 # Make sure the space is not already taken.
 def square_is_open(move, board):
@@ -82,11 +71,10 @@ def get_valid_move(player, board):
     print()
     move = None
     try:
-        move = parse_move(cli_input)
-    except:
+        move = parse_move(cli_input, board)
+    except IOError as err:
         print("That's not a space on this board, try again!")
         return get_valid_move(player, board)
-
     if square_is_open(move, board):
         return move
     else:
@@ -95,13 +83,14 @@ def get_valid_move(player, board):
 
 # Main loop.
 def run():
+    dimension = 5
     turn = 0
     winner = None
-    board = new_board(5)
+    board = new_board(dimension)
     player = 'X'
 
     print('Welcome to Tic Tac Toe!')
-    print("Enter a1 - c3 to choose a space (a1 = top left corner)")
+    print("Enter your move as 'row col'. '0 0' is the top left corner.")
     print()
 
     print_board(board)

@@ -1,3 +1,4 @@
+from string import ascii_lowercase
 # Tic Tac Toe
 
 # Convert user input to board indexes.
@@ -13,12 +14,12 @@ STRING_TO_COL = {
 }
 
 # Create a 3x3 list of blank spaces.
-def new_board():
-    return [[None]*3 for _ in range(3)]
+def new_board(dim):
+    return [[None]*dim for _ in range(dim)]
 
 # Print the current board to the terminal.
 def print_board(board):
-    print("\n-+-+-\n" .join(map(
+    print(("\n" + f"{'+'.join(['-'] * len(board))}" + "\n").join(map(
         lambda row: "|".join(map(
             lambda x: " " if not x else x,
             row)),
@@ -96,7 +97,7 @@ def get_valid_move(player, board):
 def run():
     turn = 0
     winner = None
-    board = new_board()
+    board = new_board(5)
     player = 'X'
 
     print('Welcome to Tic Tac Toe!')

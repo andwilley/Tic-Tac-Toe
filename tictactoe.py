@@ -16,10 +16,13 @@ def print_board(board):
 def get_player_from_turn(turn):
     return 'X' if turn % 2 == 0 else 'O'
 
-# Throws ValueError if numbers arent integers or aren't on the board.
+# Throws ValueError if numbers aren't integers or IOError if they aren't on the
+# board.
 def parse_move(cli_input, board):
     cli_input = list(map(lambda x: int(x), cli_input.strip().split(' ')))
-    if len(cli_input) != 2 or not (0 <= cli_input[0] < len(board[0])) or not (0 <= cli_input[1] < len(board[0])):
+    if len(cli_input) != 2 or \
+            not (0 <= cli_input[0] < len(board[0])) or \
+            not (0 <= cli_input[1] < len(board[0])):
         raise IOError("fuck off")
     return cli_input[0], cli_input[1]
 
@@ -91,9 +94,7 @@ def run():
 
     print('Welcome to Tic Tac Toe!')
     print("Enter your move as 'row col'. '0 0' is the top left corner.")
-    print()
-
-    print_board(board)
+    print_board('\n' + board)
 
     while not winner and turn < 9:
         print()
@@ -103,7 +104,6 @@ def run():
         print_board(board)
         winner = get_winner(board)
         turn += 1
-
     if winner:
         print()
         print(f'Player {winner} wins! Game over!')

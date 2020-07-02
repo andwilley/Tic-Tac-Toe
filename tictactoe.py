@@ -1,11 +1,9 @@
 from string import ascii_lowercase
 # Tic Tac Toe
 
-# Create a 3x3 list of blank spaces.
 def create_new_board(dim):
     return [[None]*dim for _ in range(dim)]
 
-# Print the current board to the terminal.
 def print_board(board):
     print(("\n" + f"{'+'.join(['-'] * len(board))}" + "\n").join(map(
         lambda row: "|".join(map(
@@ -48,6 +46,7 @@ def check_diagonals_for_winner(board):
         return right_to_left_vals.pop()
     return None
 
+def get_winner(board):
     # Check the rows for a winner.
     maybe_winner = check_rows_for_winner(board)
     if maybe_winner:
@@ -68,7 +67,7 @@ def get_valid_move(player, board):
     move = None
     try:
         move = parse_move_input(cli_input, board)
-    except IOError as err:
+    except (IOError, ValueError) as err:
         print("That's not a space on this board, try again!")
         return get_valid_move(player, board)
     if square_is_open(move, board):

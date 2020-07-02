@@ -85,18 +85,17 @@ def get_valid_move(player, board):
         return get_valid_move(player, board)
 
 # Main loop.
-def run():
-    dimension = 5
+def run(dimension = 3):
     turn = 0
     winner = None
     board = new_board(dimension)
     player = 'X'
 
     print('Welcome to Tic Tac Toe!')
-    print("Enter your move as 'row col'. '0 0' is the top left corner.")
-    print_board('\n' + board)
+    print("Enter your move as 'row col'. '0 0' is the top left corner.\n")
+    print_board(board)
 
-    while not winner and turn < 9:
+    while not winner and turn < dimension**2:
         print()
         player = get_player_from_turn(turn)
         move = get_valid_move(player, board)

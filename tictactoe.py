@@ -21,7 +21,7 @@ def parse_move_input(cli_input, board):
     if len(cli_input) != 2 or \
             not (0 <= cli_input[0] < len(board[0])) or \
             not (0 <= cli_input[1] < len(board[0])):
-        raise IOError("fuck off")
+        raise IOError("Not on the board.")
     return cli_input[0], cli_input[1]
 
 def square_is_open(move, board):

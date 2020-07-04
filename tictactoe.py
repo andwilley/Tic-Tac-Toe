@@ -30,7 +30,6 @@ def square_is_open(move, board):
 def check_rows_for_winner(board):
     for row in board:
         if row[0] and len(set(row)) == 1:
-            print('row', row[0])
             return row[0]
     return None
 
